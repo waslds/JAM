@@ -19,3 +19,5 @@ SET
 	`body` = '내용2';
 
 SELECT * FROM article;
+
+TRUNCATE article;
