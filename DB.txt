@@ -20,14 +20,14 @@ CREATE TABLE `member`(
 	`name` VARCHAR(20) NOT NULL
 );
 
-
+ALTER TABLE `member` MODIFY COLUMN loginId VARCHAR(50) NOT NULL UNIQUE;
 
 INSERT INTO article
 SET
 	regDate = NOW(),
 	updateDate = NOW(),
-	title = '제목2',
-	`body` = '내용2';
+	title = '제목1',
+	`body` = '내용1';
 	
 INSERT INTO `member`
 SET
@@ -41,4 +41,4 @@ SELECT * FROM article;
 
 SELECT * FROM `member`;
 
-TRUNCATE article;
+# TRUNCATE article;

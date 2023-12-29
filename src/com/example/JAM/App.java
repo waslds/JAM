@@ -34,7 +34,82 @@ public class App {
 					break;
 				}
 				
-				if (cmd.equals("article write")) {
+				if (cmd.equals("member join")) {
+					System.out.println("== 회원 가입 ==");
+					
+					String loginId = null;
+					
+					while (true) {
+						System.out.print("아이디 : ");
+						loginId = sc.nextLine().trim();
+						
+						if (loginId.length() == 0) {
+							System.out.println("아이디는 필수 입력정보입니다");
+							continue;
+						}
+						
+						SecSql sql = SecSql.from("SELECT COUNT(*) > 0 FROM `member`");
+						sql.append("WHERE loginId = ?", loginId);
+						
+						boolean isLoginIdDupChk = DBUtil.selectRowBooleanValue(conn, sql);
+						
+						if (isLoginIdDupChk) {
+							System.out.printf("%s은(는) 이미 사용중인 아이디입니다\n", loginId);
+							continue;
+						}
+						
+						System.out.printf("%s은(는) 사용가능한 아이디입니다\n", loginId);
+						break;
+					}
+					
+					String loginPw = null;
+					String loginPwChk = null;
+					
+					while (true) {
+						System.out.printf("비밀번호 : ");
+						loginPw = sc.nextLine().trim();
+						
+						if (loginPw.length() == 0) {
+							System.out.println("비밀번호는 필수 입력정보입니다");
+							continue;
+						}
+						
+						System.out.printf("비밀번호 확인 : ");
+						loginPwChk = sc.nextLine().trim();
+						
+						if (loginPw.equals(loginPwChk) == false) {
+							System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해주세요");
+							continue;
+						}
+						
+						break;
+					}
+					
+					String name = null;
+					
+					while (true) {
+						System.out.printf("이름 : ");
+						name = sc.nextLine().trim();
+						
+						if (name.length() == 0) {
+							System.out.println("이름은 필수 입력정보입니다");
+							continue;
+						}
+						
+						break;
+					}
+					
+					SecSql sql = SecSql.from("INSERT INTO `member`");
+					sql.append("SET regDate = NOW()");
+					sql.append(", updateDate = NOW()");
+					sql.append(", loginId = ?", loginId);
+					sql.append(", loginPw = ?", loginPw);
+					sql.append(", `name` = ?", name);
+					DBUtil.insert(conn, sql);
+					
+					System.out.printf("%s회원님이 가입되었습니다\n", name);
+				}
+				else if (cmd.equals("article write")) {
 					System.out.println("== 게시물 작성 ==");
 					
 					System.out.print("제목 : ");
