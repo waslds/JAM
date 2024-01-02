@@ -1,10 +1,12 @@
 package com.example.JAM.service;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.example.JAM.dao.ArticleDao;
+import com.example.JAM.dto.Article;
 
 public class ArticleService {
 	
@@ -19,12 +21,25 @@ public class ArticleService {
 		return articleDao.doWrite(title, body);
 	}
 
-	public List<Map<String, Object>> selectList() {
-		return articleDao.selectList();
+	public List<Article> selectList() {
+		List<Map<String, Object>> articleMaps = articleDao.selectList();
+		
+		List<Article> articles = new ArrayList<>();
+		for (Map<String, Object> articleMap : articleMaps) {
+			articles.add(new Article(articleMap));
+		}
+		
+		return articles;
 	}
 
-	public Map<String, Object> selectDetail(int id) {
-		return articleDao.selectDetail(id);
+	public Article selectDetail(int id) {
+		Map<String, Object> articleMap = articleDao.selectDetail(id);
+		
+		if (articleMap.isEmpty()) {
+			return null;
+		}
+		
+		return new Article(articleMap);
 	}
 
 	public int isExistArticle(int id) {

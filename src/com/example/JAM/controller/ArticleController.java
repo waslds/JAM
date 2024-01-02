@@ -1,9 +1,7 @@
 package com.example.JAM.controller;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import com.example.JAM.dto.Article;
@@ -37,20 +35,7 @@ public class ArticleController {
 	public void showList() {
 		System.out.println("== 게시물 목록 ==");
 		
-		List<Article> articles = new ArrayList<>();
-		
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패");
-		}
-		
-		List<Map<String, Object>> articleMaps = articleService.selectList();
-		
-		for (Map<String, Object> articleMap : articleMaps) {
-			articles.add(new Article(articleMap));
-		}
+		List<Article> articles = articleService.selectList();
 		
 		if (articles.size() == 0) {
 			System.out.println("존재하는 게시물이 없습니다");
@@ -66,14 +51,12 @@ public class ArticleController {
 	public void showDetail(String cmd) {
 		int id = Integer.parseInt(cmd.split(" ")[2]);
 		
-		Map<String, Object> articleMap = articleService.selectDetail(id);
+		Article article = articleService.selectDetail(id);
 		
-		if (articleMap.isEmpty()) {
+		if (article == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 			return;
 		}
-		
-		Article article = new Article(articleMap);
 		
 		System.out.printf("== %d번 게시물 상세보기 ==\n", id);
 		System.out.printf("번호 : %d\n", article.id);
