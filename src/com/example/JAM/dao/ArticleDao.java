@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
-import com.example.JAM.session.Session;
 import com.example.JAM.util.DBUtil;
 import com.example.JAM.util.SecSql;
 
@@ -16,11 +15,11 @@ public class ArticleDao {
 		this.conn = conn;
 	}
 
-	public int doWrite(String title, String body) {
+	public int doWrite(int memberId, String title, String body) {
 		SecSql sql = SecSql.from("INSERT INTO article");
 		sql.append("SET regDate = NOW()");
 		sql.append(", updateDate = NOW()");
-		sql.append(", memberId = ?", Session.getLoginedMember().id);
+		sql.append(", memberId = ?", memberId);
 		sql.append(", title = ?", title);
 		sql.append(", `body` = ?", body);
 		
@@ -28,17 +27,21 @@ public class ArticleDao {
 	}
 
 	public List<Map<String, Object>> selectList() {
-		SecSql sql = SecSql.from("SELECT A.id, A.regDate, A.updateDate, A.title, A.body, B.name AS writer FROM article A");
-		sql.append("JOIN `member` B ON (A.memberId = B.id)");
-		sql.append("ORDER BY id DESC");
+		SecSql sql = SecSql.from("SELECT a.*, m.name AS `writerName`");
+		sql.append("FROM article AS a");
+		sql.append("INNER JOIN `member` m");
+		sql.append("ON a.memberId = m.id");
+		sql.append("ORDER BY a.id DESC");
 		
 		return DBUtil.selectRows(conn, sql);
 	}
 
 	public Map<String, Object> selectDetail(int id) {
-		SecSql sql = SecSql.from("SELECT A.id, A.regDate, A.updateDate, A.title, A.body, B.name AS writer FROM article A");
-		sql.append("JOIN `member` B ON (A.memberId = B.id)");
-		sql.append("WHERE A.id = ?", id);
+		SecSql sql = SecSql.from("SELECT a.*, m.name AS `writerName`");
+		sql.append("FROM article AS a");
+		sql.append("INNER JOIN `member` m");
+		sql.append("ON a.memberId = m.id");
+		sql.append("WHERE a.id = ?", id);
 		
 		return DBUtil.selectRow(conn, sql);
 	}

@@ -15,6 +15,10 @@ public class Session {
 	public static Member getLoginedMember() {
 		return loginedMember;
 	}
+	
+	public static int getLoginedMemberId() {
+		return loginedMemberId;
+	}
 
 	public static void login(Member member) {
 		loginedMemberId = member.id;
