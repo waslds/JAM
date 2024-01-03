@@ -36,7 +36,7 @@ public class ArticleDao {
 		return DBUtil.selectRows(conn, sql);
 	}
 
-	public Map<String, Object> selectDetail(int id) {
+	public Map<String, Object> showDetail(int id) {
 		SecSql sql = SecSql.from("SELECT a.*, m.name AS `writerName`");
 		sql.append("FROM article AS a");
 		sql.append("INNER JOIN `member` m");
@@ -46,7 +46,7 @@ public class ArticleDao {
 		return DBUtil.selectRow(conn, sql);
 	}
 
-	public int isExistArticle(int id) {
+	public int getArticleCnt(int id) {
 		SecSql selectSql = SecSql.from("SELECT COUNT(*) FROM article");
 		selectSql.append("WHERE id = ?", id);
 		
@@ -68,5 +68,12 @@ public class ArticleDao {
 		sql.append("WHERE id = ?", id);
 		
 		DBUtil.delete(conn, sql);
+	}
+
+	public Map<String, Object> getArticleById(int id) {
+		SecSql sql = SecSql.from("SELECT * FROM article");
+		sql.append("WHERE id = ?", id);
+		
+		return DBUtil.selectRow(conn, sql);
 	}
 }

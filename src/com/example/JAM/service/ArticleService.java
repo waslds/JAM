@@ -32,8 +32,8 @@ public class ArticleService {
 		return articles;
 	}
 
-	public Article selectDetail(int id) {
-		Map<String, Object> articleMap = articleDao.selectDetail(id);
+	public Article showDetail(int id) {
+		Map<String, Object> articleMap = articleDao.showDetail(id);
 		
 		if (articleMap.isEmpty()) {
 			return null;
@@ -46,8 +46,8 @@ public class ArticleService {
 		return Integer.parseInt(cmd.split(" ")[2]);
 	}
 
-	public int isExistArticle(int id) {
-		return articleDao.isExistArticle(id);
+	public int getArticleCnt(int id) {
+		return articleDao.getArticleCnt(id);
 	}
 
 	public void doModify(int id, String title, String body) {
@@ -56,5 +56,15 @@ public class ArticleService {
 
 	public void doDelete(int id) {
 		articleDao.doDelete(id);
+	}
+
+	public Article getArticleById(int id) {
+		Map<String, Object> articleMap = articleDao.getArticleById(id);
+		
+		if (articleMap.isEmpty()) {
+			return null;
+		}
+		
+		return new Article(articleMap);
 	}
 }

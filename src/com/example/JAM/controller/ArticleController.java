@@ -7,7 +7,6 @@ import java.util.Scanner;
 import com.example.JAM.dto.Article;
 import com.example.JAM.service.ArticleService;
 import com.example.JAM.session.Session;
-import com.example.JAM.util.SecSql;
 import com.example.JAM.util.Util;
 
 public class ArticleController {
@@ -58,7 +57,7 @@ public class ArticleController {
 	public void showDetail(String cmd) {
 		int id = articleService.getNumInCmd(cmd);
 		
-		Article article = articleService.selectDetail(id);
+		Article article = articleService.showDetail(id);
 		
 		if (article == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -75,12 +74,22 @@ public class ArticleController {
 	}
 
 	public void doModify(String cmd) {
+		if (Session.isLogined() == false) {
+			System.out.println("로그인 후 이용해주세요");
+			return;
+		}
+		
 		int id = articleService.getNumInCmd(cmd);
 		
-		int articleCnt = articleService.isExistArticle(id);
+		Article article = articleService.getArticleById(id);
 		
-		if (articleCnt == 0) {
+		if (article == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
+			return;
+		}
+		
+		if (article.memberId != Session.getLoginedMemberId()) {
+			System.out.printf("%d번 게시물에 대한 수정 권한이 없습니다\n", article.id);
 			return;
 		}
 		
@@ -97,15 +106,22 @@ public class ArticleController {
 	}
 
 	public void doDelete(String cmd) {
+		if (Session.isLogined() == false) {
+			System.out.println("로그인 후 이용해주세요");
+			return;
+		}
+		
 		int id = articleService.getNumInCmd(cmd);
 		
-		SecSql selectSql = SecSql.from("SELECT COUNT(*) FROM article");
-		selectSql.append("WHERE id = ?", id);
+		Article article = articleService.getArticleById(id);
 		
-		int articleCnt = articleService.isExistArticle(id);
-		
-		if (articleCnt == 0) {
+		if (article == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
+			return;
+		}
+		
+		if (article.memberId != Session.getLoginedMemberId()) {
+			System.out.printf("%d번 게시물에 대한 삭제 권한이 없습니다\n", article.id);
 			return;
 		}
 		
