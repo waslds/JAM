@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.example.JAM.dto.Member;
 import com.example.JAM.service.MemberService;
 import com.example.JAM.session.Session;
+import com.example.JAM.util.Util;
 
 public class MemberController {
 	
@@ -19,12 +20,12 @@ public class MemberController {
 	}
 	
 	public void doJoin() {
-		System.out.println("== 회원 가입 ==");
-		
 		if (Session.isLogined()) {
 			System.out.println("로그아웃 후 이용해주세요");
 			return;
 		}
+		
+		System.out.println("== 회원 가입 ==");
 		
 		String loginId = null;
 		
@@ -91,12 +92,12 @@ public class MemberController {
 	}
 
 	public void doLogin() {
-		System.out.println("== 로그인 ==");
-		
 		if (Session.isLogined()) {
 			System.out.println("로그아웃 후 이용해주세요");
 			return;
 		}
+		
+		System.out.println("== 로그인 ==");
 		
 		String loginId = null;
 		String loginPw = null;
@@ -145,5 +146,20 @@ public class MemberController {
 		
 		Session.logout();
 		System.out.println("로그아웃 되었습니다");
+	}
+
+	public void showProfile() {
+		if (Session.isLogined() == false) {
+			System.out.println("로그인 후 이용해주세요");
+			return;
+		}
+		
+		System.out.println("== 마이페이지 ==");
+		
+		Member loginedMember = Session.getLoginedMember();
+		System.out.printf("가입일 : %s\n", Util.datetimeFormat(loginedMember.regDate));
+		System.out.printf("수정일 : %s\n", Util.datetimeFormat(loginedMember.updateDate));
+		System.out.printf("로그인 아이디 : %s\n", loginedMember.loginId);
+		System.out.printf("이름 : %s\n", loginedMember.name);
 	}
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
+import com.example.JAM.session.Session;
 import com.example.JAM.util.DBUtil;
 import com.example.JAM.util.SecSql;
 
@@ -19,7 +20,7 @@ public class ArticleDao {
 		SecSql sql = SecSql.from("INSERT INTO article");
 		sql.append("SET regDate = NOW()");
 		sql.append(", updateDate = NOW()");
-		sql.append(", memberId = ?", 1);
+		sql.append(", memberId = ?", Session.getLoginedMember().id);
 		sql.append(", title = ?", title);
 		sql.append(", `body` = ?", body);
 		
@@ -27,15 +28,17 @@ public class ArticleDao {
 	}
 
 	public List<Map<String, Object>> selectList() {
-		SecSql sql = SecSql.from("SELECT * FROM article");
+		SecSql sql = SecSql.from("SELECT A.id, A.regDate, A.updateDate, A.title, A.body, B.name AS writer FROM article A");
+		sql.append("JOIN `member` B ON (A.memberId = B.id)");
 		sql.append("ORDER BY id DESC");
 		
 		return DBUtil.selectRows(conn, sql);
 	}
 
 	public Map<String, Object> selectDetail(int id) {
-		SecSql sql = SecSql.from("SELECT * FROM article");
-		sql.append("WHERE id = ?", id);
+		SecSql sql = SecSql.from("SELECT A.id, A.regDate, A.updateDate, A.title, A.body, B.name AS writer FROM article A");
+		sql.append("JOIN `member` B ON (A.memberId = B.id)");
+		sql.append("WHERE A.id = ?", id);
 		
 		return DBUtil.selectRow(conn, sql);
 	}
