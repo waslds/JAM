@@ -49,7 +49,7 @@ public class ArticleController {
 	}
 
 	public void showDetail(String cmd) {
-		int id = Integer.parseInt(cmd.split(" ")[2]);
+		int id = articleService.getNumInCmd(cmd);
 		
 		Article article = articleService.selectDetail(id);
 		
@@ -67,7 +67,7 @@ public class ArticleController {
 	}
 
 	public void doModify(String cmd) {
-		int id = Integer.parseInt(cmd.split(" ")[2]);
+		int id = articleService.getNumInCmd(cmd);
 		
 		int articleCnt = articleService.isExistArticle(id);
 		
@@ -89,7 +89,7 @@ public class ArticleController {
 	}
 
 	public void doDelete(String cmd) {
-		int id = Integer.parseInt(cmd.split(" ")[2]);
+		int id = articleService.getNumInCmd(cmd);
 		
 		SecSql selectSql = SecSql.from("SELECT COUNT(*) FROM article");
 		selectSql.append("WHERE id = ?", id);

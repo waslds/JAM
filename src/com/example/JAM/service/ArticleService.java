@@ -41,6 +41,10 @@ public class ArticleService {
 		
 		return new Article(articleMap);
 	}
+	
+	public int getNumInCmd(String cmd) {
+		return Integer.parseInt(cmd.split(" ")[2]);
+	}
 
 	public int isExistArticle(int id) {
 		return articleDao.isExistArticle(id);
