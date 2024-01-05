@@ -21,8 +21,8 @@ public class ArticleService {
 		return articleDao.doWrite(memberId, title, body);
 	}
 
-	public List<Article> selectList() {
-		List<Map<String, Object>> articleMaps = articleDao.selectList();
+	public List<Article> showList(String searchKeyword) {
+		List<Map<String, Object>> articleMaps = articleDao.showList(searchKeyword);
 		
 		List<Article> articles = new ArrayList<>();
 		for (Map<String, Object> articleMap : articleMaps) {
